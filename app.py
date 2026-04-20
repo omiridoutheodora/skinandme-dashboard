@@ -1,7 +1,7 @@
 """
 Skin + Me — Unstructured Data Intelligence Dashboard
 A consulting-style Streamlit dashboard for the BAUD pitch.
-Visualises sentiment + thematic analysis of 1,082 Trustpilot reviews (real + synthetic).
+Visualises sentiment + thematic analysis of 1,000 Trustpilot reviews (real + synthetic).
 """
 import numpy as np
 import pandas as pd
@@ -385,19 +385,18 @@ st.markdown(
 
 # ---------------------------------------------------------------------
 # UNDERLYING SYNTHETIC REVIEW DATASET
-# We generate 1,082 reviews consistent with the headline aggregates so
+# We generate 1,000 reviews consistent with the headline aggregates so
 # that the sidebar filters can actually re-shape every chart downstream.
 # ---------------------------------------------------------------------
-TOTAL_REVIEWS = 1082
+TOTAL_REVIEWS = 1000
 
 @st.cache_data
 def build_reviews() -> pd.DataFrame:
-    """Generate 1,082 reviews whose aggregates match the headline KPIs.
+    """Generate 1,000 reviews whose aggregates match the headline KPIs.
 
     Per-category counts reconciled:
-      * rating:    5★:764  4★:63  3★:31  2★:23  1★:119   (= 1,000 base rows...)
-      * ...plus 82 extra 5★ rows to reach 1,082 and match the POS %.
-      * sentiment: Positive ~82.7%, Neutral ~3.1%, Negative ~14.2%.
+      * sentiment: Positive 82.0%, Neutral 2.0%, Negative 16.0%  (avg ≈ 4.3★).
+      * rating:    5★:763  4★:57  3★:20  2★:24  1★:136  (reconciles to 1,000).
       * months:    weighted by the trend chart shape.
     """
     rng = np.random.default_rng(42)
@@ -412,12 +411,12 @@ def build_reviews() -> pd.DataFrame:
         "Jan 26":(28,0,4),"Feb 26":(24,2,5),"Mar 26":(78,0,19),"Apr 26":(43,0,3),
     }
 
-    # Target totals per sentiment so everything reconciles to 1,082
+    # Target totals per sentiment so everything reconciles to 1,000
     # and the positive / negative percentages match the headline cards.
-    #   Positive (4–5★): 82.7% of 1,082 = 895   → 4★:63 + 5★:832
-    #   Negative (1–2★): 14.2% of 1,082 = 154   → 2★:23 + 1★:131  (close to original 142)
-    #   Neutral  (3★):   3.1%  of 1,082 = 33    → 3★:33
-    target = {"Positive": 895, "Neutral": 33, "Negative": 154}
+    #   Positive (4–5★): 82.0% of 1,000 = 820   → 4★:57 + 5★:763
+    #   Negative (1–2★): 16.0% of 1,000 = 160   → 2★:24 + 1★:136
+    #   Neutral  (3★):    2.0% of 1,000 =  20   → 3★:20
+    target = {"Positive": 820, "Neutral": 20, "Negative": 160}
 
     # Distribute each sentiment across months using the shape weights
     def distribute(sentiment_idx: int, total: int) -> dict:
@@ -562,7 +561,7 @@ with st.sidebar:
     st.markdown(f"### Skin + Me — BAUD Pitch")
     st.markdown(
         f'<p style="color:{MUTED_INK}; font-size:0.82rem; line-height:1.5; margin-top:-0.5rem;">'
-        f"Unstructured data advisory — turning 1,082 customer reviews into a "
+        f"Unstructured data advisory — turning 1,000 customer reviews into a "
         f"commercial action plan."
         f"</p>",
         unsafe_allow_html=True,
@@ -601,19 +600,9 @@ with st.sidebar:
     st.markdown(
         f'<p style="color:{MUTED_INK}; font-size:0.78rem; line-height:1.5;">'
         f"• Trustpilot (Mar–Apr 2026) — real<br>"
-        f"• Synthetic dataset (2024–2026) — template-based<br>"
-        f"• Total: 1,082 reviews<br>"
+        f"• Synthetic dataset (2024–2026)<br>"
+        f"• Total: 1,000 reviews<br>"
         f"• Verified: 655 &nbsp;|&nbsp; Unverified: 345"
-        f"</p>",
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("---")
-    st.markdown(
-        f'<p style="color:{MUTED_INK}; font-size:0.72rem; line-height:1.5;">'
-        f"<em>Synthetic data disclosure: portion of dataset generated via GPT-based "
-        f"templates grounded in real Trustpilot themes. Findings are indicative, "
-        f"not inferential.</em>"
         f"</p>",
         unsafe_allow_html=True,
     )
@@ -651,7 +640,7 @@ st.markdown(
         <p class="hero-sub">Unstructured data advisory · BAUD pitch</p>
         <h1>Skin + Me — Customer Voice Intelligence</h1>
         <p class="hero-desc">
-            1,082 Trustpilot reviews analysed for sentiment, themes, and commercial signal.
+            1,000 Trustpilot reviews analysed for sentiment, themes, and commercial signal.
             The customer voice is already telling Skin + Me where to invest —
             this dashboard makes that voice measurable.
         </p>
@@ -985,7 +974,7 @@ with tab4:
                 flow triggered by reaction keywords in support tickets.</p>
                 <div class="impact">
                     <strong>Indicative impact:</strong> resolve ~50% of skin-reaction complaints →
-                    reduce 1★ reviews by ~28% → lift avg. rating from 4.33 to ~4.48.
+                    reduce 1★ reviews by ~28% → lift avg. rating from 4.3 to ~4.45.
                 </div>
             </div>
             """,
@@ -1019,7 +1008,7 @@ with tab4:
                 using verified 5★ reviews as primary creative.</p>
                 <div class="impact">
                     <strong>Indicative impact:</strong> CAC reduction of ~10–15% on acne-targeted campaigns;
-                    acne cohort already reviews at 4.6★ vs 4.33★ average — lower refund risk too.
+                    acne cohort already reviews at 4.6★ vs 4.3★ average — lower refund risk too.
                 </div>
             </div>
             """,
@@ -1031,7 +1020,7 @@ with tab4:
     section("Commercial impact summary", "Combined effect of the three recommendations over 6 months")
 
     imp_col1, imp_col2, imp_col3, imp_col4 = st.columns(4)
-    with imp_col1: kpi("Avg. rating lift",    "+0.15★",  "4.33 → ~4.48", "green")
+    with imp_col1: kpi("Avg. rating lift",    "+0.15★",  "4.3 → ~4.45", "green")
     with imp_col2: kpi("1★ reviews avoided",  "~33/quarter", "Across reaction + billing", "green")
     with imp_col3: kpi("Estimated CAC saving","8–12%",   "On acne-led campaigns", "green")
     with imp_col4: kpi("Payback period",      "< 6 months", "On phase-one investment", "gold")
@@ -1140,8 +1129,8 @@ st.markdown(
     <hr>
     <p style="color:{MUTED_INK}; font-size:0.75rem; text-align:center; margin:0;">
         Skin + Me — Unstructured Data Advisory Pitch · BAUD A2 · April 2026<br>
-        <em>Synthetic data disclosure: a portion of the 1,082-review dataset was generated via
-        template-based GenAI methods grounded in real Trustpilot themes. All findings are
+        <em>Synthetic data disclosure: a portion of the 1,000-review dataset was generated via
+        GenAI methods grounded in real Trustpilot themes. All findings are
         indicative and intended to demonstrate analytical capability.</em>
     </p>
     """,
